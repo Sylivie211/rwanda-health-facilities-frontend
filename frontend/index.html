@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwanda Health Facilities</title>
+</head>
+<body>
+    <header>
+        <h1>Rwanda Health Facilities</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Search</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <table>
+        <form >
+            <label for="district">District:</label>
+            <input type="text" name="facility-district" id="district" placeholder="e.g. Gasabo"/>
+            <label for="type">Type:</label>
+            <select id="type" name="type">
+                <option value="">choose type</option>
+                <option value="hospital">Hospital</option>
+                <option value="clinic">Clinic</option>
+                <option value="health_center">Health Center</option>
+            </select>
+            <button type="button">Search</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>District</th>
+                    <th>Services</th>
+                </tr>
+            </thead>
+            <tbody>
+                 <tr>
+                    <td>1</td>
+                    <td>Kigali University Teaching Hospital</td>
+                    <td>Hospital</td>
+                    <td>Gasabo</td>
+                    <td>Emergency, Surgery, Maternity, Pediatrics</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Kibagabaga District Hospital</td>
+                    <td>Hospital</td>
+                    <td>Gasabo</td>
+                    <td>Emergency, Maternity, General</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Remera Health Center</td>
+                    <td>Health Center</td>
+                    <td>Gasabo</td>
+                    <td>Consultation, Vaccination, Maternity</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer>Sylivie &copy;2026</footer>
+</body>
+</html>
