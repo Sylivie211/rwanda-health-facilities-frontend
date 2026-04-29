@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rwanda Health Facilities</title>
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
     <header>
         <h1>Rwanda Health Facilities</h1>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Search</a></li>
-                <li><a href="#">About</a></li>
+                <li><a href="#" target="_blank">Home</a></li>
+                <li><a href="#" target="_blank">Search</a></li>
+                <li><a href="#" target="_blank">About</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <table>
         <form >
             <label for="district">District:</label>
-            <input type="text" name="facility-district" id="district" placeholder="e.g. Gasabo"/>
+            <input type="text" name="facility-district" id="district" placeholder="e.g. Gasabo"/><br/>
             <label for="type">Type:</label>
             <select id="type" name="type">
                 <option value="">choose type</option>
                 <option value="hospital">Hospital</option>
                 <option value="clinic">Clinic</option>
                 <option value="health_center">Health Center</option>
-            </select>
+            </select><br/>
             <button type="button">Search</button>
         </form>
         <table>
@@ -61,6 +61,13 @@
                     <td>Health Center</td>
                     <td>Gasabo</td>
                     <td>Consultation, Vaccination, Maternity</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Kicukiro Health Center</td>
+                    <td>Health Center</td>
+                    <td>Kicukiro</td>
+                    <td>Consultation, Vaccination, Family Planning</td>
                 </tr>
             </tbody>
         </table>
