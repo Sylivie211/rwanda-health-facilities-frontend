@@ -11,7 +11,7 @@ A Python-based API and frontend dashboard for managing and querying health facil
 - Fully responsive — works on mobile, tablet and desktop
 
 ### Live URL
-🌐 [View Live Site](https://sylivie211.github.io/rwanda-health-facilities-frontend/)
+ [View Live Site](https://sylivie211.github.io/rwanda-health-facilities-frontend/)
 
 ### Screenshot
 ![Rwanda Health Facilities Dashboard](facilities.png)
