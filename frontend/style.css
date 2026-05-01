@@ -7,6 +7,10 @@ body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 1rem;
     line-height: 1.6;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
 }
 /* sections */
 header{
@@ -17,13 +21,14 @@ header{
     justify-content: space-between;  
     align-items: center; 
     padding: 1em; 
-    width: 100%;
-    max-width: 100%;
-    font-size: clamp(0.5em, 2vw, 1.5em);    
+/*     width: 100%;
+    max-width: 100%; */
+    font-size: clamp(0.5em, 1.2vw, 1.5em);    
 }
 
 main{
-    padding: 0 3em;
+    padding: 0 1em;
+    flex: 1;
 }
 footer{
     background-color: #F6EFEE;
@@ -39,17 +44,27 @@ footer{
 .nav-container{
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
+    align-items: start;
 }
 nav a{
     text-decoration: none;
     color: #6F5E76;
-    gap: 1em;
+    gap: 0.5em;
+    transition: all 0.2s ease;
+    
 } 
+nav ul{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+   
+}
 
  nav li{
     list-style: none;
-    margin: 0.4em;
-    display: inline;
+    margin: 0.2em;
+    
 }
 nav a:visited{
     color: #6F5E76;
@@ -61,9 +76,7 @@ nav a:hover{
 nav a:active{
     color: red;
 }
-nav ul { 
-    display: flex; gap: 1em; 
-}
+
 
 /* form */
 form{
@@ -87,6 +100,7 @@ button{
     background-color: #6F5E76;
     color: #ccc;
     max-width: 100%;
+    transition: all 0.2s ease;
 }
 button:hover{
     background-color: #ccc;
@@ -103,6 +117,7 @@ table{
 }
 .table-wrapper{
     overflow-x: auto;
+    /* width: 100%; */
 }
 th, td{
 border: 1px solid #ccc; 
@@ -124,6 +139,7 @@ tr:hover{
  /* cards */
 .cards-container{
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 1.2em;
@@ -137,17 +153,30 @@ tr:hover{
     margin-bottom: 1em;
 }
 .card{
-    flex: 1 1 280px;
+    flex: 1 1 100%;
     border-radius: 8px;
     border-left: 4px solid #6F5E76;
-    padding: 0.5em;
+    padding: 1em;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 
 }
 /* mobile first */
-@media (min-width: 375px) {
-   
-    header{
-        max-width: 100%;
+@media (min-width: 768px) {
+    nav ul{
+        flex-direction: row;
+
+    }
+    .nav-container{
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+   .card{
+        flex: 1 1 calc(50% - 1.2em);
+   }
+}
+@media (min-width: 1024px){
+    .card{
+        flex: 1 1 calc(33.3% - 1.2em);
     }
 }
