@@ -52,3 +52,4 @@ function filterByDistrict(facilities, district){
 console.log("filtering facilities from Gasabo:");
 x = filterByDistrict(facilities, "Gasabo");
 console.log(x);
+
