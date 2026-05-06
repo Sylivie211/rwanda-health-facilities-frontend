@@ -94,7 +94,7 @@ input, select, label{
     max-width: 100%;
     
 }
-button{
+.Search-button, .Clear-button{
     padding: 0.4em;
     border-radius: 12px;
     background-color: #6F5E76;

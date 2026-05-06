@@ -20,7 +20,7 @@
     <main>
         <form >
             <label for="district">District:</label>
-            <input type="text" name="facility-district" id="district" placeholder="e.g. Gasabo"/><br/>
+            <input type="text" name="facility-district" id="district-input" placeholder="e.g. Gasabo"/><br/>
             <label for="type">Type:</label>
             <select id="type" name="type">
                 <option value="">choose type</option>
@@ -28,7 +28,8 @@
                 <option value="clinic">Clinic</option>
                 <option value="health_center">Health Center</option>
             </select><br/>
-            <button type="button">Search</button>
+            <input type="submit" name="Search" class="Search-button" value="Search"/>
+            <input type="submit" name="Clear" class="Clear-button" value="Clear"/>
         </form>
         <div class="table-wrapper">
         <table>
