@@ -98,22 +98,36 @@ console.log(document.querySelector('.cards-container'))
 let allFacilities = []
 
 async function loadFacilities() {
-    document.querySelector('#loading').style.display = 'block';
-    const response = await fetch('http://localhost:8080/facilities')
-    const data = await response.json()
-    allFacilities = data;  
-    //saved data 
-    const saved = localStorage.getItem('lastDistrict');
-    if (saved) {
-        districtInput.value = saved;
-        const filtered = filterByDistrict(allFacilities, saved);
-        renderTable(filtered);
-        renderCards(filtered);
-    } else {
-        renderTable(data);
-        renderCards(data);
+    
+    try{
+        document.querySelector('#loading').style.display = 'block';
+        const response = await fetch('http://localhost:8080/facilities')
+        
+        if(!response.ok){
+            throw new Error('API error: ' + response.status);
+        }
+        
+        const data = await response.json()
+        allFacilities = data;  
+        //saved data 
+        const saved = localStorage.getItem('lastDistrict');
+        if (saved) {
+            districtInput.value = saved;
+            const filtered = filterByDistrict(allFacilities, saved);
+            renderTable(filtered);
+            renderCards(filtered);
+        } else {
+            renderTable(data);
+            renderCards(data);
+        }
+    } catch(error){
+        showError('Could not load facilities: ' + err.message);
+        renderTable([]);
+        renderCards([]);       
+        
+    }finally{
+        document.querySelector('#loading').style.display = 'none';
     }
-    document.querySelector('#loading').style.display = 'none';
 }
 
 
