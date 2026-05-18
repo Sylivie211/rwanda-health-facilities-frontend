@@ -1,4 +1,4 @@
-const facilities = [
+/* const facilities = [
     {
         id: 1,
         name: "Kigali University Teaching Hospital",
@@ -89,16 +89,40 @@ const facilities = [
         services: ["consultation", "pharmacy"],
         last_updated: "2026-04-06"
     }
-];
+]; */
 
 console.log("script loaded")
-console.log(facilities.length)
+//console.log(facilities.length)
 console.log(document.querySelector('.cards-container'))
 
-function renderTable(facilities){
+let allFacilities = []
+
+async function loadFacilities() {
+    document.querySelector('#loading').style.display = 'block';
+    const response = await fetch('http://localhost:8080/facilities')
+    const data = await response.json()
+    allFacilities = data;  
+    //saved data 
+    const saved = localStorage.getItem('lastDistrict');
+    if (saved) {
+        districtInput.value = saved;
+        const filtered = filterByDistrict(allFacilities, saved);
+        renderTable(filtered);
+        renderCards(filtered);
+    } else {
+        renderTable(data);
+        renderCards(data);
+    }
+    document.querySelector('#loading').style.display = 'none';
+}
+
+
+loadFacilities();
+
+function renderTable(allFacilities){
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
-    facilities.forEach(function(facility){
+    allFacilities.forEach(function(facility){
         let row = document.createElement('tr');
         row.innerHTML = `<td>${facility.id}</td>
         <td>${facility.name}</td>
@@ -113,12 +137,12 @@ function renderTable(facilities){
 
 }
 
-renderTable(facilities)
+//renderTable(facilities)
 
-function renderCards(facilities){
+function renderCards(allFacilities){
     const cards = document.querySelector('.cards-container');
     cards.innerHTML = '';
-    facilities.forEach(function(facility){
+    allFacilities.forEach(function(facility){
         let card= document.createElement('div')
         card.className = 'card'   
         card.innerHTML = `
@@ -135,7 +159,7 @@ function renderCards(facilities){
     });
     
 }
- renderCards(facilities);
+ //renderCards(facilities);
 
 
  // Make the search form actually work
@@ -153,20 +177,30 @@ clearButton.addEventListener('click', resetTable);
 function getDistrict(e){
 e.preventDefault();
 const district = districtInput.value.trim();
-const filtered = filterByDistrict(facilities, district);
+localStorage.setItem('lastDistrict', district);
+
 if (district === ""){
-    renderTable(facilities);
+    renderTable(allFacilities);
+    renderCards(allFacilities);
 }
 else{
+const filtered = filterByDistrict(allFacilities, district);
 renderTable(filtered);
 renderCards(filtered);
 }
 }
+
+const saved = localStorage.getItem('lastDistrict');
+if (saved) {
+    districtInput.value = saved;
+}
+
 function liveSearch(){
 const district = districtInput.value.trim();
-const filtered = filterByDistrict(facilities, district);
+const filtered = filterByDistrict(allFacilities, district);
 if (district === ""){
-    renderTable(facilities);
+    renderTable(allFacilities);
+    renderCards(allFacilities);
 }
 else{
 renderTable(filtered);
@@ -174,8 +208,8 @@ renderCards(filtered);
 } 
 }
 
-function filterByDistrict(facilities, district){
-    return facilities.filter(function(facility){ 
+function filterByDistrict(allFacilities, district){
+    return allFacilities.filter(function(facility){ 
         return facility.district.toLowerCase() === district.toLowerCase();
     });
 } 
@@ -184,6 +218,7 @@ function resetTable(e){
 e.preventDefault();
 districtInput.value = '';
 selectButton.value = '';
-renderTable(facilities);
-renderCards(facilities);
+localStorage.removeItem('lastDistrict'); 
+renderTable(allFacilities);
+renderCards(allFacilities);
 }
