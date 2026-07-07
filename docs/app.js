@@ -116,10 +116,14 @@ async function loadFacilities() {
             const filtered = filterByDistrict(allFacilities, saved);
             renderTable(filtered);
             renderCards(filtered);
+
+            
         } else {
             renderTable(data);
             renderCards(data);
         }
+
+        renderLineChart(allFacilities);
     } catch(error){
         showError('Could not load facilities: ' + err.message);
         renderTable([]);
@@ -161,7 +165,7 @@ function renderCards(allFacilities){
         card.className = 'card'   
         card.innerHTML = `
                 <div class="card-top">
-                    <span class="icon">🏥</span>
+                    <span class="icon">'🏥'</span>
                     <h3>${facility.name}</h3>
                 </div>
                 <div class="card-details">
@@ -236,3 +240,47 @@ localStorage.removeItem('lastDistrict');
 renderTable(allFacilities);
 renderCards(allFacilities);
 }
+
+function countByDistrict(facilities) {
+  return facilities.reduce((counts, facility) => {
+    const district = facility.district;
+    counts[district] = (counts[district] || 0) + 1;
+    return counts;
+  }, {});
+}
+
+function renderLineChart(facilities){
+    result = countByDistrict(facilities);
+    labels= Object.keys(result)
+    data = Object.values(result)
+
+    const ctx = document.getElementById('analyticsChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Facilities per District',
+                data: data,
+                borderColor: '#3e95cd',
+                backgroundColor: 'rgba(62, 149, 205, 0.2)',
+                fill: true,
+                tension: 0.3                
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1 // counts are whole numbers, no need for 1.5 facilities
+                }
+                }
+            }           
+        }
+    });
+}
+
+/* renderLineChart(allFacilities); */
