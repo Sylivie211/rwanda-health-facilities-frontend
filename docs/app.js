@@ -124,6 +124,7 @@ async function loadFacilities() {
         }
 
         renderLineChart(allFacilities);
+        renderPieChart(allFacilities);
     } catch(error){
         showError('Could not load facilities: ' + err.message);
         renderTable([]);
@@ -282,5 +283,37 @@ function renderLineChart(facilities){
         }
     });
 }
+function countByType(facilities){
+    return facilities.reduce((counts, facility) => {
+        const type = facility.type
+        counts[type] = (counts[type] || 0) + 1
 
+        return counts
+    }, {});
+}
+
+function renderPieChart(facilities){
+    result = countByType(facilities);
+    labels= Object.keys(result)
+    data = Object.values(result)
+
+    ctx = document.getElementById('typeChart')
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels : labels,
+            datasets: [{
+                label: 'Facilities per Type',
+                data: data,
+                borderColor: '#3e95cd',
+                backgroundColor: [
+                    '#3e95cd',  // hospital
+                    '#8e5ea2',  // health_center
+                    '#3cba9f',  // clinic
+                    '#e8c3b9'   // (extra, in case a 4th type shows up)
+                ],
+            }]
+        }
+    })
+}
 /* renderLineChart(allFacilities); */
