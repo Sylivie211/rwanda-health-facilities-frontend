@@ -141,22 +141,50 @@ loadFacilities(); */
 
 /* New load */
 async function loadAndRender(filters = {}) {
+    setState('loading')
     try {
-        document.querySelector('#loading').style.display = 'block';
-
         const data = await fetchFacilities(filters);
         allFacilities = data;
-
+        if (data.length === 0) {
+            setState('empty');
+            return;
+        }
         renderTable(data);
         renderCards(data);
         renderLineChart(data);
         renderPieChart(data);
+        setState('success')
     } catch (error) {
-        console.error('Could not load facilities: ' + error.message);
-        renderTable([]);
-        renderCards([]);
-    } finally {
-        document.querySelector('#loading').style.display = 'none';
+        setState('error', error.message);
+    }
+}
+
+function setState(state, message = '') {
+    const loadingEl = document.querySelector('#loading');
+    const emptyEl = document.querySelector('#empty');
+    const errorEl = document.querySelector('#error');
+    const tableEl = document.querySelector('.table-wrapper');
+    const chartsEl = document.querySelector('.charts-container');
+    const cardsEl = document.querySelector('.cards-container');
+
+    // Hide everything first, then show only what this state needs
+    loadingEl.style.display = 'none';
+    emptyEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    tableEl.style.display = 'none';
+    chartsEl.style.display = 'none';
+    cardsEl.style.display = 'none';
+
+    if (state === 'loading') {
+        loadingEl.style.display = 'block';
+    } else if (state === 'success') {
+        tableEl.style.display = 'block';
+        chartsEl.style.display = 'block';
+    } else if (state === 'empty') {
+        emptyEl.style.display = 'block';
+    } else if (state === 'error') {
+        errorEl.style.display = 'block';
+        errorEl.textContent = message;
     }
 }
 
