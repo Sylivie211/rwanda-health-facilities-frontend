@@ -97,7 +97,7 @@ console.log(document.querySelector('.cards-container'))
 
 let allFacilities = []
 
-async function loadFacilities() {
+/* async function loadFacilities() {
     
     try{
         document.querySelector('#loading').style.display = 'block';
@@ -126,7 +126,7 @@ async function loadFacilities() {
         renderLineChart(allFacilities);
         renderPieChart(allFacilities);
     } catch(error){
-        showError('Could not load facilities: ' + err.message);
+        console.log('Could not load facilities: ' + err.message);
         renderTable([]);
         renderCards([]);       
         
@@ -136,7 +136,44 @@ async function loadFacilities() {
 }
 
 
-loadFacilities();
+loadFacilities(); */
+
+
+/* New load */
+async function loadAndRender(filters = {}) {
+    try {
+        document.querySelector('#loading').style.display = 'block';
+
+        const data = await fetchFacilities(filters);
+        allFacilities = data;
+
+        renderTable(data);
+        renderCards(data);
+        renderLineChart(data);
+        renderPieChart(data);
+    } catch (error) {
+        console.error('Could not load facilities: ' + error.message);
+        renderTable([]);
+        renderCards([]);
+    } finally {
+        document.querySelector('#loading').style.display = 'none';
+    }
+}
+
+async function fetchFacilities(filters = {}) {
+    const params = new URLSearchParams();
+    if (filters.district) params.append('district', filters.district);
+    if (filters.type) params.append('type', filters.type);
+
+    const url = 'http://localhost:8080/facilities' + (params.toString() ? '?' + params.toString() : '');
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error('API error: ' + response.status);
+    }
+
+    return await response.json();
+}
 
 function renderTable(allFacilities){
     const tbody = document.querySelector('tbody');
@@ -187,59 +224,63 @@ function renderCards(allFacilities){
  const selectButton = document.querySelector('select');
  const searchButton = document.querySelector('input[type="submit"]');
  const clearButton = document.querySelector('.Clear-button');
+ 
 
-  districtInput.addEventListener('keyup', liveSearch); 
+districtInput.addEventListener('keyup', liveSearch); 
 searchButton.addEventListener('click', getDistrict);
 clearButton.addEventListener('click', resetTable);
+selectButton.addEventListener('change', getType);
 
 
 function getDistrict(e){
-e.preventDefault();
-const district = districtInput.value.trim();
-localStorage.setItem('lastDistrict', district);
+    e.preventDefault();
+    const district = districtInput.value.trim();
+    const type = selectButton.value;
+    localStorage.setItem('lastDistrict', district);
 
-if (district === ""){
-    renderTable(allFacilities);
-    renderCards(allFacilities);
+    loadAndRender({ district, type });
 }
-else{
-const filtered = filterByDistrict(allFacilities, district);
-renderTable(filtered);
-renderCards(filtered);
-}
+
+function getType(){
+    const district = districtInput.value.trim();
+    const type = selectButton.value;
+
+    loadAndRender({ district, type });
 }
 
 const saved = localStorage.getItem('lastDistrict');
 if (saved) {
     districtInput.value = saved;
+    loadAndRender({ district: saved });
+} else {
+    loadAndRender({});
 }
 
 function liveSearch(){
-const district = districtInput.value.trim();
-const filtered = filterByDistrict(allFacilities, district);
-if (district === ""){
-    renderTable(allFacilities);
-    renderCards(allFacilities);
-}
-else{
-renderTable(filtered);
-renderCards(filtered);
-} 
+    const district = districtInput.value.trim();
+    const type = selectButton.value;
+
+    loadAndRender({ district, type }); 
 }
 
-function filterByDistrict(allFacilities, district){
+/* function filterByDistrict(allFacilities, district){
     return allFacilities.filter(function(facility){ 
         return facility.district.toLowerCase() === district.toLowerCase();
     });
 } 
+
+function filterByType(facilities, type) {
+    return facilities.filter(function(facility){
+        return facility.type.toLowerCase() === type.toLowerCase();
+    });
+} */
 
 function resetTable(e){
 e.preventDefault();
 districtInput.value = '';
 selectButton.value = '';
 localStorage.removeItem('lastDistrict'); 
-renderTable(allFacilities);
-renderCards(allFacilities);
+loadAndRender({});
 }
 
 function countByDistrict(facilities) {
@@ -250,6 +291,10 @@ function countByDistrict(facilities) {
   }, {});
 }
 
+
+let lineChartInstance = null;
+let pieChartInstance = null;
+
 function renderLineChart(facilities){
     result = countByDistrict(facilities);
     labels= Object.keys(result)
@@ -257,7 +302,11 @@ function renderLineChart(facilities){
 
     const ctx = document.getElementById('analyticsChart');
 
-    new Chart(ctx, {
+
+    if (lineChartInstance) {
+    lineChartInstance.destroy();
+    }
+    lineChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -298,7 +347,12 @@ function renderPieChart(facilities){
     data = Object.values(result)
 
     ctx = document.getElementById('typeChart')
-    new Chart(ctx, {
+
+
+    if (pieChartInstance) {
+    pieChartInstance.destroy();
+    }
+    pieChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
             labels : labels,
